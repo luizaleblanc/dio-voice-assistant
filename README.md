@@ -91,7 +91,7 @@ Get-Content .env | Where-Object { $_.Trim() -ne '' } | Foreach-Object {
 
 ---
 
-# 🏛️ Arquitetura
+# Arquitetura
 
 O projeto segue princípios de **Clean Architecture**, promovendo separação de responsabilidades entre as camadas.
 
@@ -150,6 +150,4 @@ Implementa os adaptadores externos, incluindo:
 
 ---
 
-# 📄 Licença
-
-Este projeto foi desenvolvido para fins de estudo e experimentação com Inteligência Artificial aplicada a sistemas backend.
+# Este projeto foi desenvolvido para fins de estudo e experimentação com Inteligência Artificial aplicada a sistemas backend.
