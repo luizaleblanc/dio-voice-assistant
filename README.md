@@ -1,85 +1,155 @@
-# DIO Spring Boot - Final Project 05: Spring AI (budgeting)
+# Voice-Driven Budgeting API
 
-## Introduction
+Uma API REST desenvolvida em **Java + Spring Boot** para gerenciamento de transações financeiras pessoais utilizando **Inteligência Artificial**, **Processamento de Linguagem Natural (NLP)** e **comandos de voz**.
 
-This final module applies Spring AI in a budgeting API while preserving the same layered architecture used across the track.
+---
 
-The goal is to integrate AI capabilities without bypassing domain and use case boundaries.
+## Visão Geral
 
-## Code Context
+O projeto foi desenvolvido seguindo uma arquitetura modular, integrando modelos de IA para automatizar todo o fluxo de entrada de dados financeiros.
 
-The project processes voice commands to create and query financial transactions.
+O pipeline permite que o usuário registre movimentações financeiras apenas falando, enquanto a aplicação é responsável por:
 
-Primary flow:
+- Transcrever o áudio enviado.
+- Interpretar a intenção do usuário utilizando LLMs.
+- Executar automaticamente as regras de negócio.
+- Retornar uma confirmação por voz da operação realizada.
 
-1. Client uploads an audio file.
-2. Audio is transcribed into text.
-3. The model selects an application tool/use case.
-4. The use case persists or queries transaction data.
-5. The final response is converted to audio.
+---
 
-## Project Structure
+# Pipeline de Inteligência Artificial
 
-- `src/main/java/dio/budgeting/domain`
-  - Domain model and repository contract.
-- `src/main/java/dio/budgeting/application`
-  - Use cases used by both REST and AI tool calling.
-- `src/main/java/dio/budgeting/infrastructure`
-  - HTTP adapters, JPA adapters, and integration glue.
+O processamento ocorre de forma assíncrona em três etapas principais:
 
-## Module-Specific Topics
+### 1. Transcrição
+- Conversão de arquivos de áudio (`.m4a`) em texto.
+- Utilização do modelo **OpenAI Whisper**.
 
-### Speech-to-text
+### 2. Orquestração e Processamento
+- Integração com **GPT-4o** através do **Spring AI**.
+- Utilização de **Tool Calling** para converter intenções do usuário em chamadas para funções Java.
+- Execução dinâmica das regras de negócio.
 
-- Uses `TranscriptionModel` for audio transcription.
-- Model settings are configured in `application.properties`.
+### 3. Síntese de Voz
+- Geração de respostas utilizando modelos **Text-to-Speech (TTS)**.
+- Confirmação audível das operações executadas.
 
-### Tool calling
+---
 
-- `ChatClient` registers use-case tools.
-- `@Tool` methods expose business capabilities to the model.
+# Stack Tecnológica
 
-### Text-to-speech
+| Tecnologia | Descrição |
+|------------|-----------|
+| Java 17 | Linguagem principal |
+| Spring Boot 3.2.5 | Framework backend |
+| Spring AI 1.0.0-M1 | Integração com modelos de IA |
+| MySQL | Banco de dados |
+| Docker Compose | Infraestrutura do banco |
+| Gradle | Gerenciamento de dependências |
 
-- `TextToSpeechModel` produces MP3 output from final text.
-- AI endpoint returns generated audio.
+---
 
-## Spring AI Documentation
+# Configuração e Execução
 
-- Spring AI Reference: https://docs.spring.io/spring-ai/reference/index.html
-- ChatModel API: https://docs.spring.io/spring-ai/reference/api/chatmodel.html
-- ChatClient API: https://docs.spring.io/spring-ai/reference/api/chatclient.html
-- Tools API: https://docs.spring.io/spring-ai/reference/api/tools.html
-- Audio Transcriptions API: https://docs.spring.io/spring-ai/reference/api/audio/transcriptions.html
-- Audio Speech API: https://docs.spring.io/spring-ai/reference/api/audio/speech.html
+## Pré-requisitos
 
-## Shared Architecture References
+Antes de executar o projeto, certifique-se de possuir:
 
-Common architecture concepts are documented in the root README:
+- Java JDK 17 ou superior
+- Docker
+- Docker Compose
+- Uma API Key da OpenAI
 
-- [DDD layers](../README.md#ddd-layered-architecture)
-- [Class vs record](../README.md#java-class-vs-java-record-in-domain-modeling)
-- [Strong typed identifiers](../README.md#strong-typed-identifiers)
-- [Repository pattern](../README.md#repository-pattern)
-- [Use cases and Clean Architecture](../README.md#use-cases-and-clean-architecture)
-- [Docker Compose support](../README.md#docker-compose-support-in-development)
+---
 
-## How to Run
+## Variáveis de Ambiente
 
-Set your OpenAI API key:
+Crie um arquivo `.env` na raiz do projeto (não versionado):
 
-```bash
-export OPENAI_API_KEY="your_api_key_here"
+```properties
+OPENAI_API_KEY=sua_chave_aqui
 ```
 
-Run the application and tests:
+---
+
+## Inicialização
+
+### 1. Carregar as variáveis de ambiente (PowerShell)
+
+```powershell
+Get-Content .env | Where-Object { $_.Trim() -ne '' } | Foreach-Object {
+    $var = $_.Split('=', 2)
+    [Environment]::SetEnvironmentVariable($var[0].Trim(), $var[1].Trim(), "Process")
+}
+```
+
+### 2. Executar a aplicação
 
 ```bash
 ./gradlew bootRun
-./gradlew test
 ```
 
-## Notes
+---
 
-- Educational final project focused on AI plus architectural discipline.
-- External provider integration tests may require active credentials.
+# 🏛️ Arquitetura
+
+O projeto segue princípios de **Clean Architecture**, promovendo separação de responsabilidades entre as camadas.
+
+```
+src
+├── application
+│   ├── Use Cases
+│   └── Functions (Spring AI)
+│
+├── domain
+│   ├── Entities
+│   └── Repository Contracts
+│
+└── infrastructure
+    ├── Controllers
+    ├── Persistence
+    └── Configurations
+```
+
+### Application
+Responsável pelos **casos de uso** da aplicação e pelas implementações da interface `Function`, permitindo que a IA interaja diretamente com as regras de negócio.
+
+### Domain
+Contém as **entidades** e os **contratos de repositório**, representando o núcleo da aplicação.
+
+### Infrastructure
+Implementa os adaptadores externos, incluindo:
+
+- Controllers REST
+- Persistência de dados
+- Configurações
+- Integrações
+
+---
+
+# Funcionalidades
+
+- Cadastro de transações via voz
+- Transcrição automática com Whisper
+- Interpretação de comandos utilizando GPT-4o
+- Tool Calling com Spring AI
+- Persistência em MySQL
+- Resposta por voz utilizando TTS
+
+---
+
+# Roadmap
+
+- [ ] Implementar testes unitários.
+- [ ] Desenvolver interface Web utilizando Web Audio API.
+- [ ] Suporte a múltiplas moedas.
+- [ ] Histórico de conversas.
+- [ ] Dashboard financeiro.
+- [ ] Autenticação de usuários.
+- [ ] Deploy em ambiente cloud.
+
+---
+
+# 📄 Licença
+
+Este projeto foi desenvolvido para fins de estudo e experimentação com Inteligência Artificial aplicada a sistemas backend.
