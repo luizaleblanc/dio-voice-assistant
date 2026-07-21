@@ -1,0 +1,56 @@
+package dio.budgeting.application;
+
+import dio.budgeting.application.input.PersistTransactionInput;
+import dio.budgeting.application.output.TransactionOutput;
+import dio.budgeting.domain.Category;
+import dio.budgeting.domain.Transaction;
+import dio.budgeting.domain.TransactionRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+class PersistTransactionUseCaseTest {
+
+    private TransactionRepository transactionRepository;
+    private PersistTransactionUseCase useCase;
+
+    @BeforeEach
+    void setUp() {
+        transactionRepository = Mockito.mock(TransactionRepository.class);
+        useCase = new PersistTransactionUseCase(transactionRepository);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAmountIsZeroOrNegative() {
+        PersistTransactionInput input = new PersistTransactionInput("Teste Negativo", 0L, Category.GROCERIES);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            useCase.execute(input);
+        });
+
+        assertEquals("Operação negada: O valor da transação deve ser maior que zero.", exception.getMessage());
+        verify(transactionRepository, never()).save(any(Transaction.class));
+    }
+
+    @Test
+    void shouldSaveTransactionSuccessfully() {
+        PersistTransactionInput input = new PersistTransactionInput("Almoço", 5000L, Category.GROCERIES);
+
+        when(transactionRepository.save(any(Transaction.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        TransactionOutput output = useCase.execute(input);
+
+        assertNotNull(output);
+        assertEquals(5000.0, output.value());
+        verify(transactionRepository, times(1)).save(any(Transaction.class));
+    }
+}

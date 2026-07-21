@@ -6,4 +6,6 @@ public interface TransactionRepository {
     Transaction save(Transaction transaction);
 
     List<Transaction> findAllByCategory(Category category);
+
+    Double sumAmountByCategory(Category category);
 }

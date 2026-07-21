@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import java.util.function.Function;
 
 @Service
-@Description("Salva uma nova transação financeira (despesa ou receita) no banco de dados")
+@Description("Cria e salva uma nova transação financeira no banco de dados")
 public class PersistTransactionUseCase implements Function<PersistTransactionInput, TransactionOutput> {
-    
+
     private final TransactionRepository transactionRepository;
 
     public PersistTransactionUseCase(TransactionRepository transactionRepository) {
@@ -20,8 +20,17 @@ public class PersistTransactionUseCase implements Function<PersistTransactionInp
     }
 
     public TransactionOutput execute(PersistTransactionInput input) {
-        var transaction = transactionRepository.save(
-                new Transaction(input.description(), input.amount(), input.category()));
+        if (input.amount() <= 0) {
+            throw new IllegalArgumentException("Operação negada: O valor da transação deve ser maior que zero.");
+        }
+
+        Transaction transaction = new Transaction(
+                input.description(),
+                input.amount(),
+                input.category()
+        );
+
+        transactionRepository.save(transaction);
 
         return TransactionOutput.from(transaction);
     }

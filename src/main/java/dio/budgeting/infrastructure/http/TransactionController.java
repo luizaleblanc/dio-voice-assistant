@@ -1,5 +1,6 @@
 package dio.budgeting.infrastructure.http;
 
+import dio.budgeting.application.GetTotalByCategoryUseCase;
 import dio.budgeting.application.ListTransactionsByCategoryUseCase;
 import dio.budgeting.application.PersistTransactionUseCase;
 import dio.budgeting.domain.Category;
@@ -24,23 +25,26 @@ public class TransactionController {
     
     private final PersistTransactionUseCase persistTransactionUseCase;
     private final ListTransactionsByCategoryUseCase listTransactionsByCategoryUseCase;
+    private final GetTotalByCategoryUseCase getTotalByCategoryUseCase;
     private final ChatClient chatClient;
     private final OpenAiAudioTranscriptionModel transcriptionModel;
     private final OpenAiAudioSpeechModel speechModel;
 
     public TransactionController(PersistTransactionUseCase persistTransactionUseCase,
                                  ListTransactionsByCategoryUseCase listTransactionsByCategoryUseCase,
+                                 GetTotalByCategoryUseCase getTotalByCategoryUseCase,
                                  @Value("classpath:prompts/system-message.st") Resource systemPrompt,
                                  ChatClient.Builder chatClientBuilder,
                                  OpenAiAudioTranscriptionModel transcriptionModel,
                                  OpenAiAudioSpeechModel speechModel) throws IOException {
         this.persistTransactionUseCase = persistTransactionUseCase;
         this.listTransactionsByCategoryUseCase = listTransactionsByCategoryUseCase;
+        this.getTotalByCategoryUseCase = getTotalByCategoryUseCase;
         this.transcriptionModel = transcriptionModel;
         this.speechModel = speechModel;
         this.chatClient = chatClientBuilder
                 .defaultSystem(systemPrompt.getContentAsString(Charset.defaultCharset()))
-                .defaultFunctions("persistTransactionUseCase", "listTransactionsByCategoryUseCase")
+                .defaultFunctions("persistTransactionUseCase", "listTransactionsByCategoryUseCase", "getTotalByCategoryUseCase")
                 .build();
     }
 
