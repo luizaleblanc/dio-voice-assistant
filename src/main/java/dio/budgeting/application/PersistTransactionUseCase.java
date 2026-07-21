@@ -24,11 +24,12 @@ public class PersistTransactionUseCase implements Function<PersistTransactionInp
             throw new IllegalArgumentException("Operação negada: O valor da transação deve ser maior que zero.");
         }
 
-        Transaction transaction = new Transaction(
-                input.description(),
-                input.amount(),
-                input.category()
-        );
+     Transaction transaction = new Transaction(
+        input.description(),
+        input.amount(),
+        input.category(),
+        input.currency()
+);
 
         transactionRepository.save(transaction);
 

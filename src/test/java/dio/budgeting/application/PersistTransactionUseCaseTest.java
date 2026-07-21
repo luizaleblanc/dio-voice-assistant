@@ -31,7 +31,7 @@ class PersistTransactionUseCaseTest {
 
     @Test
     void shouldThrowExceptionWhenAmountIsZeroOrNegative() {
-        PersistTransactionInput input = new PersistTransactionInput("Teste Negativo", 0L, Category.GROCERIES);
+        PersistTransactionInput input = new PersistTransactionInput("Teste Negativo", 0L, Category.GROCERIES, "BRL");
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             useCase.execute(input);
@@ -43,7 +43,7 @@ class PersistTransactionUseCaseTest {
 
     @Test
     void shouldSaveTransactionSuccessfully() {
-        PersistTransactionInput input = new PersistTransactionInput("Almoço", 5000L, Category.GROCERIES);
+        PersistTransactionInput input = new PersistTransactionInput("Almoço", 5000L, Category.GROCERIES, "BRL");
 
         when(transactionRepository.save(any(Transaction.class))).thenAnswer(invocation -> invocation.getArgument(0));
 

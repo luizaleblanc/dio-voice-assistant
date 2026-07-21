@@ -26,20 +26,24 @@ public class TransactionEntity {
     @Enumerated(EnumType.STRING)
     private Category category;
 
+    private String currency;
+
     public static TransactionEntity from(Transaction transaction) {
         return new TransactionEntity(
                 transaction.getId().uuid(),
                 transaction.getDescription(),
                 transaction.getAmount(),
-                transaction.getCategory());
+                transaction.getCategory(),
+                transaction.getCurrency());
     }
 
     public Transaction toDomain() {
         return new Transaction(
-                new TransactionId(this.id),
+                this.id != null ? new TransactionId(this.id) : null,
                 this.description,
                 this.amount,
-                this.category
+                this.category,
+                this.currency
         );
     }
 }
