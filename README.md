@@ -149,13 +149,13 @@ Implementa os adaptadores externos, incluindo:
 
 ## Roadmap
 
-- [x] Implementar testes unitários.
-- [ ] Desenvolver interface Web utilizando Web Audio API (Next.js).
-- [ ] Suporte a múltiplas moedas.
-- [ ] Histórico de conversas.
-- [ ] Dashboard financeiro.
-- [ ] Autenticação de usuários.
-- [ ] Deploy em ambiente cloud.
+* [x] Implementar testes unitários.
+* [x] Desenvolver interface Web utilizando Web Audio API (Next.js).
+* [ ] Suporte a múltiplas moedas.
+* [ ] Histórico de conversas.
+* [ ] Dashboard financeiro.
+* [ ] Autenticação de usuários.
+* [ ] Deploy em ambiente cloud.
 
 ---
 
