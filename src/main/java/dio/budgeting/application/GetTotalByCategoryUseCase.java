@@ -2,6 +2,7 @@ package dio.budgeting.application;
 
 import dio.budgeting.application.input.GetTotalByCategoryInput;
 import dio.budgeting.application.output.GetTotalByCategoryOutput;
+import dio.budgeting.domain.Category;
 import dio.budgeting.domain.TransactionRepository;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
@@ -22,5 +23,9 @@ public class GetTotalByCategoryUseCase implements Function<GetTotalByCategoryInp
     public GetTotalByCategoryOutput apply(GetTotalByCategoryInput input) {
         Double total = transactionRepository.sumAmountByCategory(input.category());
         return new GetTotalByCategoryOutput(total);
+    }
+
+    public double execute(Category category) {
+        throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 }

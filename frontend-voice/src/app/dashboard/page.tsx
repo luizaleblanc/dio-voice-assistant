@@ -1,18 +1,16 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import Link from "next/link";
 
 export default function Home() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("Aguardando interação");
-
+  
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  
   const sessionIdRef = useRef<string>("");
-
-  useEffect(() => {
-    sessionIdRef.current = Date.now().toString(36) + Math.random().toString(36).substring(2);
-  }, []);
 
   const startRecording = async () => {
     try {
@@ -46,15 +44,18 @@ export default function Home() {
       setIsRecording(false);
       setStatus("Processando áudio com a Inteligência Artificial...");
       
-      // Encerra as trilhas de áudio para liberar o hardware
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
     }
   };
 
   const processAudioTransaction = async (audioBlob: Blob) => {
+    if (!sessionIdRef.current) {
+      sessionIdRef.current = Date.now().toString(36) + Math.random().toString(36).substring(2);
+    }
+
     const formData = new FormData();
     formData.append("file", audioBlob, "voice-command.webm");
-    formData.append("sessionId", sessionIdRef.current); // Enviando o ID da sessão para o backend manter o contexto
+    formData.append("sessionId", sessionIdRef.current); // Usa o valor guardado na referência
 
     try {
       const response = await fetch("http://localhost:8080/transactions/ai", {
@@ -85,8 +86,18 @@ export default function Home() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-zinc-950 text-zinc-100 p-8">
-      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center shadow-2xl">
-        <h1 className="text-2xl font-semibold mb-2 tracking-tight">Organizador de Gastos</h1>
+      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-2xl p-8 flex flex-col items-center shadow-2xl relative">
+        
+        <div className="absolute top-6 right-6">
+          <Link 
+            href="/dashboard" 
+            className="text-xs bg-zinc-800 hover:bg-indigo-600 px-3 py-2 rounded-lg transition-colors shadow-sm font-medium"
+          >
+            Dashboard
+          </Link>
+        </div>
+
+        <h1 className="text-2xl font-semibold mb-2 tracking-tight mt-4">QUAK Voice</h1>
         <p className="text-zinc-400 text-sm mb-12 text-center h-6">{status}</p>
 
         <button

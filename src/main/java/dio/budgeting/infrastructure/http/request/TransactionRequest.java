@@ -6,5 +6,6 @@ import dio.budgeting.domain.Category;
 public record TransactionRequest(String description, Category category, long amount, String currency) {
     public PersistTransactionInput toInput() {
         return new PersistTransactionInput(description, amount, category, currency);
+ 
     }
 }
