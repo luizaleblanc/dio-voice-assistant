@@ -2,14 +2,22 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { logoutBFF } from "@/app/actions/auth";
 
 export default function Dashboard() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [status, setStatus] = useState<string>("Toque para começar a falar");
+  const router = useRouter();
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const sessionIdRef = useRef<string>("");
+
+  const handleLogout = async () => {
+    await logoutBFF();
+    router.push("/login");
+  };
 
   useEffect(() => {
     sessionIdRef.current = Date.now().toString(36) + Math.random().toString(36).substring(2);
@@ -61,6 +69,12 @@ export default function Dashboard() {
         method: "POST",
         body: formData,
       });
+
+      if (response.status === 401 || response.status === 403) {
+        setStatus("Sessão expirada. Redirecionando...");
+        await handleLogout();
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -146,12 +160,21 @@ export default function Dashboard() {
         />
       </div>
 
-      <Link
-        href="/dashboard/finance"
-        className="absolute right-6 top-6 z-10 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
-      >
-        Resumo financeiro
-      </Link>
+      <div className="absolute right-6 top-6 z-10 flex items-center gap-2">
+        <Link
+          href="/dashboard/finance"
+          className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+        >
+          Resumo financeiro
+        </Link>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+        >
+          Sair
+        </button>
+      </div>
 
       <h1 className="relative z-10 mb-1 text-lg font-medium text-zinc-300">Organiza AI</h1>
       <p className="relative z-10 mb-16 text-sm text-zinc-500">Assistente financeiro</p>

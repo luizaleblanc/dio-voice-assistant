@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { logoutBFF } from "@/app/actions/auth";
 
 interface CategorySummary {
   category: string;
@@ -39,16 +41,29 @@ export default function FinanceDashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutBFF();
+    router.push("/login");
+  };
 
   useEffect(() => {
     fetch("/api/dashboard")
-      .then((res) => {
+      .then(async (res) => {
+        if (res.status === 401 || res.status === 403) {
+          await handleLogout();
+          return null;
+        }
         if (!res.ok) throw new Error("Falha ao carregar dados");
         return res.json();
       })
-      .then((json: DashboardData) => setData(json))
+      .then((json: DashboardData | null) => {
+        if (json) setData(json);
+      })
       .catch(() => setError("Não foi possível carregar o dashboard."))
       .finally(() => setLoading(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -69,12 +84,21 @@ export default function FinanceDashboard() {
             <h1 className="text-lg font-medium text-zinc-300">Dashboard Financeiro</h1>
             <p className="text-sm text-zinc-500">Seus gastos por categoria</p>
           </div>
-          <Link
-            href="/dashboard"
-            className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
-          >
-            Voltar
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard"
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+            >
+              Voltar
+            </Link>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+            >
+              Sair
+            </button>
+          </div>
         </div>
 
         {loading && <p className="text-center text-sm text-zinc-500">Carregando...</p>}

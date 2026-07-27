@@ -6,6 +6,7 @@ import dio.budgeting.infrastructure.http.dto.LoginResponseDTO;
 import dio.budgeting.infrastructure.http.dto.RegisterDTO;
 import dio.budgeting.infrastructure.persistence.UserRepository;
 import dio.budgeting.infrastructure.security.TokenService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,7 +40,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO data) {
+    public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO data) {
         if (this.userRepository.findByEmail(data.email()).isPresent()) {
             return ResponseEntity.badRequest().body("E-mail já cadastrado!");
         }

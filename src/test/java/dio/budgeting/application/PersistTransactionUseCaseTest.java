@@ -5,6 +5,7 @@ import dio.budgeting.application.output.TransactionOutput;
 import dio.budgeting.domain.Category;
 import dio.budgeting.domain.Transaction;
 import dio.budgeting.domain.TransactionRepository;
+import dio.budgeting.infrastructure.security.CurrentUserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,12 +22,15 @@ import static org.mockito.Mockito.when;
 class PersistTransactionUseCaseTest {
 
     private TransactionRepository transactionRepository;
+    private CurrentUserService currentUserService;
     private PersistTransactionUseCase useCase;
 
     @BeforeEach
     void setUp() {
         transactionRepository = Mockito.mock(TransactionRepository.class);
-        useCase = new PersistTransactionUseCase(transactionRepository);
+        currentUserService = Mockito.mock(CurrentUserService.class);
+        when(currentUserService.getCurrentUserId()).thenReturn("user-teste-id");
+        useCase = new PersistTransactionUseCase(transactionRepository, currentUserService);
     }
 
     @Test

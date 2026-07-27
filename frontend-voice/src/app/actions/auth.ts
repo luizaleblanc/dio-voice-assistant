@@ -37,6 +37,11 @@ export async function loginBFF(formData: FormData) {
   }
 }
 
+export async function logoutBFF() {
+  const cookieStore = await cookies();
+  cookieStore.delete("organiza_token");
+}
+
 export async function registerBFF(formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
@@ -49,6 +54,13 @@ export async function registerBFF(formData: FormData) {
     });
 
     if (!response.ok) {
+      const contentType = response.headers.get("content-type") ?? "";
+
+      if (contentType.includes("application/json")) {
+        const fieldErrors = (await response.json()) as Record<string, string>;
+        throw new Error(Object.values(fieldErrors).join(" "));
+      }
+
       const errorMsg = await response.text();
       throw new Error(errorMsg || "Erro ao cadastrar");
     }
