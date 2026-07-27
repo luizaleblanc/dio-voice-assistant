@@ -5,7 +5,7 @@ import java.util.List;
 public interface TransactionRepository {
     Transaction save(Transaction transaction);
 
-    List<Transaction> findAllByCategory(Category category);
+    List<Transaction> findAllByCategoryAndUserId(Category category, String userId);
 
-    Double sumAmountByCategory(Category category);
+    Double sumAmountByCategoryAndUserId(Category category, String userId);
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 
 export default function Dashboard() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -144,6 +145,13 @@ export default function Dashboard() {
           }}
         />
       </div>
+
+      <Link
+        href="/dashboard/finance"
+        className="absolute right-6 top-6 z-10 rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+      >
+        Resumo financeiro
+      </Link>
 
       <h1 className="relative z-10 mb-1 text-lg font-medium text-zinc-300">Organiza AI</h1>
       <p className="relative z-10 mb-16 text-sm text-zinc-500">Assistente financeiro</p>

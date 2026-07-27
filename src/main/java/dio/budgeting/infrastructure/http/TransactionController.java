@@ -8,6 +8,9 @@ import dio.budgeting.domain.Category;
 import dio.budgeting.infrastructure.http.request.TransactionRequest;
 import dio.budgeting.infrastructure.http.response.TransactionResponse;
 import org.springframework.ai.chat.client.ChatClient;
+import dio.budgeting.infrastructure.http.response.CategorySummary;
+import dio.budgeting.infrastructure.http.response.DashboardSummaryResponse;
+import java.util.ArrayList;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
@@ -76,6 +79,7 @@ public class TransactionController {
         return listTransactionsByCategoryUseCase.execute(category).stream().map(TransactionResponse::from).toList();
     }
 
+   
     @GetMapping("/summary")
     public ResponseEntity<Map<String, Double>> getDashboardSummary() {
         Map<String, Double> summary = new HashMap<>();
@@ -99,6 +103,36 @@ public class TransactionController {
 
         byte[] responseAudio = processVoiceCommand(file.getResource(), sessionId);
         return ResponseEntity.ok(responseAudio);
+    }
+
+     @GetMapping("/dashboard")
+    public ResponseEntity<DashboardSummaryResponse> getDashboard() {
+        List<CategorySummary> categorySummaries = new ArrayList<>();
+        List<TransactionOutput> allTransactions = new ArrayList<>();
+        double totalSpent = 0;
+        String currency = "BRL";
+
+        for (Category category : Category.values()) {
+            List<TransactionOutput> outputs = listTransactionsByCategoryUseCase.execute(category);
+            if (outputs.isEmpty()) {
+                continue;
+            }
+
+            double categoryTotal = outputs.stream().mapToDouble(TransactionOutput::value).sum();
+            totalSpent += categoryTotal;
+            currency = outputs.get(0).currency();
+
+            categorySummaries.add(new CategorySummary(category.name(), categoryTotal, currency, outputs.size(), 0));
+            allTransactions.addAll(outputs);
+        }
+
+        double finalTotal = totalSpent;
+        List<CategorySummary> withPercentages = categorySummaries.stream()
+                .map(c -> new CategorySummary(c.category(), c.total(), c.currency(), c.count(),
+                        finalTotal > 0 ? (c.total() / finalTotal) * 100 : 0))
+                .toList();
+
+        return ResponseEntity.ok(new DashboardSummaryResponse(totalSpent, currency, withPercentages, allTransactions));
     }
 
     @PostMapping(value = "/ai-base64", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -28,13 +28,16 @@ public class TransactionEntity {
 
     private String currency;
 
+    private String userId;
+
     public static TransactionEntity from(Transaction transaction) {
         return new TransactionEntity(
                 transaction.getId().uuid(),
                 transaction.getDescription(),
                 transaction.getAmount(),
                 transaction.getCategory(),
-                transaction.getCurrency());
+                transaction.getCurrency(),
+                transaction.getUserId());
     }
 
     public Transaction toDomain() {
@@ -43,7 +46,8 @@ public class TransactionEntity {
                 this.description,
                 this.amount,
                 this.category,
-                this.currency
+                this.currency,
+                this.userId
         );
     }
 }

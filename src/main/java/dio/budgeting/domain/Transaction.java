@@ -11,12 +11,14 @@ public class Transaction {
     private long amount;
     private Category category;
     private String currency;
+    private String userId;
 
-    public Transaction(String description, long amount, Category category, String currency) {
+    public Transaction(String description, long amount, Category category, String currency, String userId) {
         this.id = new TransactionId();
         this.description = description;
         this.amount = amount;
         this.category = category;
         this.currency = currency;
+        this.userId = userId;
     }
 }

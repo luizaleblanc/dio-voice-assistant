@@ -4,6 +4,7 @@ import dio.budgeting.application.input.GetTotalByCategoryInput;
 import dio.budgeting.application.output.GetTotalByCategoryOutput;
 import dio.budgeting.domain.Category;
 import dio.budgeting.domain.TransactionRepository;
+import dio.budgeting.infrastructure.security.CurrentUserService;
 import org.springframework.context.annotation.Description;
 import org.springframework.stereotype.Service;
 
@@ -14,18 +15,22 @@ import java.util.function.Function;
 public class GetTotalByCategoryUseCase implements Function<GetTotalByCategoryInput, GetTotalByCategoryOutput> {
 
     private final TransactionRepository transactionRepository;
+    private final CurrentUserService currentUserService;
 
-    public GetTotalByCategoryUseCase(TransactionRepository transactionRepository) {
+    public GetTotalByCategoryUseCase(TransactionRepository transactionRepository, CurrentUserService currentUserService) {
         this.transactionRepository = transactionRepository;
+        this.currentUserService = currentUserService;
     }
 
     @Override
     public GetTotalByCategoryOutput apply(GetTotalByCategoryInput input) {
-        Double total = transactionRepository.sumAmountByCategory(input.category());
+        String userId = currentUserService.getCurrentUserId();
+        Double total = transactionRepository.sumAmountByCategoryAndUserId(input.category(), userId);
         return new GetTotalByCategoryOutput(total);
     }
 
     public double execute(Category category) {
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+        String userId = currentUserService.getCurrentUserId();
+        return transactionRepository.sumAmountByCategoryAndUserId(category, userId);
     }
 }

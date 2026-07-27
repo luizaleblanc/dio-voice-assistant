@@ -25,16 +25,16 @@ public class JpaTransactionRepository implements TransactionRepository {
     }
 
     @Override
-    public List<Transaction> findAllByCategory(Category category) {
-        return entityRepository.findAllByCategory(category.name())
+    public List<Transaction> findAllByCategoryAndUserId(Category category, String userId) {
+        return entityRepository.findAllByCategoryAndUserId(category, userId)
                 .stream()
                 .map(TransactionEntity::toDomain)
                 .toList();
     }
 
     @Override
-    public Double sumAmountByCategory(Category category) {
-        Double total = entityRepository.sumAmountByCategory(category.name());
+    public Double sumAmountByCategoryAndUserId(Category category, String userId) {
+        Double total = entityRepository.sumAmountByCategoryAndUserId(category, userId);
         return total != null ? total : 0.0;
     }
 }
