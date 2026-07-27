@@ -153,7 +153,7 @@ Implementa os adaptadores externos, incluindo:
 * [x] Desenvolver interface Web utilizando Web Audio API (Next.js).
 * [x] Suporte a múltiplas moedas.
 * [x] Histórico de conversas.
-* [ ] Dashboard financeiro.
+* [x] Dashboard financeiro.
 * [ ] Autenticação de usuários.
 * [ ] Deploy em ambiente cloud.
 
