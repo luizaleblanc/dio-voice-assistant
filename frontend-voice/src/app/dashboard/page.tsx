@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { logoutBFF } from "@/app/actions/auth";
+import { BrandBlob } from "@/components/BrandBlob";
+import { Waveform } from "@/components/Waveform";
+import { WaveLines } from "@/components/WaveLines";
 
 export default function Dashboard() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -149,61 +152,80 @@ export default function Dashboard() {
   };
 
   return (
-    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-[#03060a] p-8">
+    <main className="relative flex min-h-screen flex-col overflow-hidden bg-[#02040a] px-4 py-8 sm:p-8">
       <div className="pointer-events-none absolute inset-0">
+        <BrandBlob className="left-1/2 top-1/3 h-[34rem] w-[34rem] -translate-x-1/2 -translate-y-1/2" />
+        <BrandBlob className="bottom-[-3rem] left-[-3rem] h-64 w-64" delay="-5s" />
+        <BrandBlob className="right-[-2rem] top-16 h-52 w-52" delay="-9s" />
         <div
-          className="absolute inset-0 opacity-[0.03]"
+          className="absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(circle, #7dd3fc 1px, transparent 1px)",
             backgroundSize: "24px 24px",
           }}
         />
       </div>
 
-      <div className="absolute right-6 top-6 z-10 flex items-center gap-2">
+      <h1 className="absolute left-1/2 top-4 z-10 -translate-x-1/2 text-center text-sm font-semibold text-zinc-100 sm:top-6 sm:text-base">
+        Gravar
+      </h1>
+
+      <div className="absolute right-4 top-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:right-6 sm:top-6">
         <Link
           href="/dashboard/finance"
-          className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+          className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
         >
           Resumo financeiro
         </Link>
         <button
           type="button"
           onClick={handleLogout}
-          className="rounded-xl border border-white/10 bg-white/[0.03] px-4 py-2 text-sm text-zinc-300 transition-colors hover:bg-white/[0.06]"
+          className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
         >
           Sair
         </button>
       </div>
 
-      <h1 className="relative z-10 mb-1 text-lg font-medium text-zinc-300">Organiza AI</h1>
-      <p className="relative z-10 mb-16 text-sm text-zinc-500">Assistente financeiro</p>
-
-      <div className="relative z-10 flex items-center justify-center">
-        <div className={`absolute h-64 w-64 rounded-full border border-emerald-400/20 ${isRecording ? "animate-ping" : ""}`} />
-        <div className={`absolute h-52 w-52 rounded-full border border-emerald-400/30 ${isRecording ? "animate-pulse" : ""}`} />
-        <div className="absolute h-64 w-64 rounded-full bg-emerald-500/10 blur-2xl" />
+      <div className="relative z-10 flex flex-1 items-center justify-center">
+        <WaveLines className="absolute inset-x-0 top-1/2 -translate-y-1/2" height={340} />
 
         <button
           onClick={isRecording ? stopRecording : startRecording}
-          className={`relative z-10 flex h-32 w-32 items-center justify-center rounded-full shadow-2xl transition-all duration-300 ${
+          className={`relative z-10 flex h-40 w-40 items-center justify-center rounded-full shadow-2xl transition-all duration-300 sm:h-52 sm:w-52 ${
             isRecording
-              ? "bg-red-500 shadow-red-500/40"
-              : "bg-emerald-500 shadow-emerald-500/40 hover:bg-emerald-400"
+              ? "bg-gradient-to-br from-rose-500 to-red-600 shadow-red-500/40"
+              : "bg-gradient-to-br from-cyan-400 to-blue-600 shadow-blue-500/40 hover:from-cyan-300 hover:to-blue-500"
           }`}
           aria-label={isRecording ? "Parar gravação" : "Iniciar gravação"}
         >
-          <div className={`rounded-full bg-black/80 transition-all duration-300 ${isRecording ? "h-8 w-8 rounded-md" : "h-6 w-6"}`} />
+          {isRecording ? (
+            <Waveform bars={9} className="h-11" barClassName="bg-black/70" />
+          ) : (
+            <svg viewBox="0 0 24 24" fill="none" className="h-12 w-12 text-black/80">
+              <path
+                d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z"
+                fill="currentColor"
+              />
+              <path
+                d="M19 11a7 7 0 0 1-14 0M12 18v3"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          )}
         </button>
       </div>
 
-      <p className="relative z-10 mt-16 h-6 text-center text-sm text-zinc-400">{status}</p>
+      <div className="relative z-10 mb-6 sm:mb-10">
+        <p className="h-6 text-center text-sm text-zinc-400">{status}</p>
 
-      <div className="relative z-10 mt-12 max-w-xs text-center text-xs text-zinc-600">
-        <p>Toque no botão e diga, por exemplo:</p>
-        <p className="mt-1 italic text-zinc-500">
-          &quot;Adicione uma despesa de 45 reais em alimentação&quot;
-        </p>
+        <div className="mx-auto mt-6 max-w-xs text-center text-xs text-zinc-600">
+          <p>Toque no botão e diga, por exemplo:</p>
+          <p className="mt-1 italic text-zinc-500">
+            &quot;Adicione uma despesa de 45 reais em alimentação&quot;
+          </p>
+        </div>
       </div>
     </main>
   );

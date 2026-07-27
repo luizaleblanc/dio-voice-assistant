@@ -15,4 +15,6 @@ public interface TransactionEntityRepository extends JpaRepository<TransactionEn
 
     @Query("SELECT SUM(t.amount) FROM TransactionEntity t WHERE t.category = :category AND t.userId = :userId")
     Double sumAmountByCategoryAndUserId(@Param("category") Category category, @Param("userId") String userId);
+
+    void deleteByUserId(String userId);
 }

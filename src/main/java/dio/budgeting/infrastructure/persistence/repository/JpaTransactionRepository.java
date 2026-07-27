@@ -37,4 +37,9 @@ public class JpaTransactionRepository implements TransactionRepository {
         Double total = entityRepository.sumAmountByCategoryAndUserId(category, userId);
         return total != null ? total : 0.0;
     }
+
+    @Override
+    public void deleteAllByUserId(String userId) {
+        entityRepository.deleteByUserId(userId);
+    }
 }

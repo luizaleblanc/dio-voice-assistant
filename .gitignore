@@ -36,5 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
+### Claude Code ###
+.claude/
+
 # Variaveis de Ambiente
 .env

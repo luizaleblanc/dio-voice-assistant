@@ -8,4 +8,6 @@ public interface TransactionRepository {
     List<Transaction> findAllByCategoryAndUserId(Category category, String userId);
 
     Double sumAmountByCategoryAndUserId(Category category, String userId);
+
+    void deleteAllByUserId(String userId);
 }

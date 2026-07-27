@@ -3,6 +3,7 @@ package dio.budgeting.infrastructure.persistence.entity;
 import dio.budgeting.domain.Category;
 import dio.budgeting.domain.Transaction;
 import dio.budgeting.domain.TransactionId;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -24,6 +25,7 @@ public class TransactionEntity {
     private long amount;
 
     @Enumerated(EnumType.STRING)
+    @Column(length = 32)
     private Category category;
 
     private String currency;
