@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { API_BASE_URL } from "@/lib/api";
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -10,7 +11,7 @@ export async function GET() {
   }
 
   try {
-    const response = await fetch("http://localhost:8080/transactions/dashboard", {
+    const response = await fetch(`${API_BASE_URL}/transactions/dashboard`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

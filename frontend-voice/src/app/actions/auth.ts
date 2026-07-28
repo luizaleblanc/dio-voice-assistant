@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { API_BASE_URL } from "@/lib/api";
 
-const BACKEND_URL = "http://localhost:8080/auth";
+const BACKEND_URL = `${API_BASE_URL}/auth`;
 
 export async function loginBFF(formData: FormData) {
   const email = formData.get("email");

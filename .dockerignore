@@ -1,0 +1,13 @@
+.git
+.gradle
+build
+bin
+out
+.idea
+.vscode
+.claude
+frontend-voice
+docs
+*.md
+.env
+compose.yml

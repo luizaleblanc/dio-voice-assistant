@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { API_BASE_URL } from "@/lib/api";
 
 export async function POST(request: Request) {
   const cookieStore = await cookies();
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
 
     console.log("[BFF] Enviando áudio como Base64 (JSON)...");
 
-    const response = await fetch("http://localhost:8080/transactions/ai-base64", {
+    const response = await fetch(`${API_BASE_URL}/transactions/ai-base64`, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${token}`,

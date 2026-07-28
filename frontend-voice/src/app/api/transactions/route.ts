@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
+import { API_BASE_URL } from "@/lib/api";
 
 export async function DELETE() {
   const cookieStore = await cookies();
@@ -10,7 +11,7 @@ export async function DELETE() {
   }
 
   try {
-    const response = await fetch("http://localhost:8080/transactions", {
+    const response = await fetch(`${API_BASE_URL}/transactions`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
