@@ -166,24 +166,31 @@ export default function Dashboard() {
         />
       </div>
 
-      <h1 className="absolute left-1/2 top-4 z-10 -translate-x-1/2 text-center text-sm font-semibold text-zinc-100 sm:top-6 sm:text-base">
-        Gravar
-      </h1>
+      <div className="relative z-20 flex items-center justify-between gap-2">
+        <div aria-hidden className="hidden shrink-0 items-center gap-2 sm:invisible sm:flex">
+          <span className="rounded-xl border px-4 py-2 text-sm">Resumo financeiro</span>
+          <span className="rounded-xl border px-4 py-2 text-sm">Sair</span>
+        </div>
 
-      <div className="absolute right-4 top-4 z-20 flex flex-wrap items-center justify-end gap-2 sm:right-6 sm:top-6">
-        <Link
-          href="/dashboard/finance"
-          className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
-        >
-          Resumo financeiro
-        </Link>
-        <button
-          type="button"
-          onClick={handleLogout}
-          className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
-        >
-          Sair
-        </button>
+        <h1 className="flex-1 truncate text-center text-sm font-semibold text-zinc-100 sm:text-base">
+          Gravar
+        </h1>
+
+        <div className="flex shrink-0 items-center gap-2">
+          <Link
+            href="/dashboard/finance"
+            className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
+          >
+            Resumo financeiro
+          </Link>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
+          >
+            Sair
+          </button>
+        </div>
       </div>
 
       <div className="relative z-10 flex flex-1 items-center justify-center">

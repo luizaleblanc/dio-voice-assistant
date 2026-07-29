@@ -109,20 +109,20 @@ export default function FinanceDashboard() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-2xl">
-        <div className="relative mb-6 flex items-center justify-between gap-3 sm:mb-8">
+        <div className="mb-6 flex items-center justify-between gap-3 sm:mb-8">
           <Link
             href="/dashboard"
-            className="rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
+            className="shrink-0 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 py-2 text-xs font-medium text-zinc-300 transition-colors hover:border-cyan-400/30 hover:bg-white/[0.06] sm:px-4 sm:text-sm"
           >
             Voltar
           </Link>
 
-          <div className="absolute left-1/2 -translate-x-1/2 text-center">
-            <h1 className="text-base font-semibold text-zinc-100 sm:text-lg">Resumo financeiro</h1>
-            <p className="text-xs text-zinc-500 sm:text-sm">Seus gastos por categoria</p>
+          <div className="min-w-0 flex-1 text-center">
+            <h1 className="truncate text-base font-semibold text-zinc-100 sm:text-lg">Resumo financeiro</h1>
+            <p className="truncate text-xs text-zinc-500 sm:text-sm">Seus gastos por categoria</p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={() => setShowClearModal(true)}
