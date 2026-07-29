@@ -16,6 +16,7 @@ export default function Dashboard() {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const sessionIdRef = useRef<string>("");
+  const audioPlayerRef = useRef<HTMLAudioElement | null>(null);
 
   const handleLogout = async () => {
     await logoutBFF();
@@ -59,6 +60,14 @@ export default function Dashboard() {
       setStatus("Processando com IA...");
 
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+
+      // Alguns navegadores mobile só permitem play() em elementos <audio> tocados
+      // diretamente por um gesto do usuário. Cria/"destrava" o elemento aqui, dentro
+      // do gesto de toque, para poder reaproveitá-lo depois que o áudio da IA chegar.
+      if (!audioPlayerRef.current) {
+        audioPlayerRef.current = new Audio();
+      }
+      audioPlayerRef.current.play().catch(() => {});
     }
   };
 
@@ -131,7 +140,9 @@ export default function Dashboard() {
         }
       }
 
-      const audio = new Audio(audioUrl);
+      const audio = audioPlayerRef.current ?? new Audio();
+      audioPlayerRef.current = audio;
+      audio.src = audioUrl;
       setStatus("Reproduzindo resposta...");
 
       audio.load();
