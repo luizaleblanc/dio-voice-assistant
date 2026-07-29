@@ -41,3 +41,6 @@ out/
 
 # Variaveis de Ambiente
 .env
+
+# Node (nao deveria existir na raiz do backend, mas por seguranca)
+node_modules/
