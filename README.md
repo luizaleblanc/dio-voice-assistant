@@ -239,7 +239,7 @@ Caso a IA retorne um valor não reconhecido, o backend aplica um fallback seguro
 * [x] Histórico de conversas.
 * [x] Dashboard financeiro.
 * [x] Autenticação de usuários.
-* [ ] Deploy em ambiente cloud.
+* [x] Deploy em ambiente cloud.
 
 ---
 
