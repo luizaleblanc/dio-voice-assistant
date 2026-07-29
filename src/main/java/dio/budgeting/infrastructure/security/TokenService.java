@@ -15,7 +15,7 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret:minha-chave-secreta-muito-segura-e-longa-para-o-projeto}")
+    @Value("${api.security.token.secret}")
     private String secret;
 
     private SecretKey getSigningKey() {
