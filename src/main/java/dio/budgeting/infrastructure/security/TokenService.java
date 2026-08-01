@@ -1,6 +1,5 @@
 package dio.budgeting.infrastructure.security;
 
-import dio.budgeting.domain.User;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,17 +14,20 @@ import java.util.Date;
 @Service
 public class TokenService {
 
-    @Value("${api.security.token.secret}")
-    private String secret;
+    private final String secret;
+
+    public TokenService(@Value("${api.security.token.secret}") String secret) {
+        this.secret = secret;
+    }
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(String email) {
         return Jwts.builder()
-                .subject(user.getEmail())
-                .issuer("QUAK") 
+                .subject(email)
+                .issuer("QUAK")
                 .expiration(Date.from(genExpirationDate()))
                 .signWith(getSigningKey())
                 .compact();

@@ -1,7 +1,6 @@
 package dio.budgeting.infrastructure.security;
 
-import dio.budgeting.infrastructure.persistence.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import dio.budgeting.domain.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,13 +9,16 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthorizationService implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public AuthorizationService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // O Spring vai usar esse método automaticamente quando chamarmos o authenticationManager
         return userRepository.findByEmail(username)
+                .map(AuthenticatedUser::new)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + username));
     }
 }

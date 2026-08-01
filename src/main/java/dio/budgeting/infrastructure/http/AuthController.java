@@ -1,16 +1,16 @@
 package dio.budgeting.infrastructure.http;
 
 import dio.budgeting.domain.User;
+import dio.budgeting.domain.UserRepository;
 import dio.budgeting.infrastructure.http.dto.AuthenticationDTO;
 import dio.budgeting.infrastructure.http.dto.LoginResponseDTO;
 import dio.budgeting.infrastructure.http.dto.RegisterDTO;
-import dio.budgeting.infrastructure.persistence.UserRepository;
 import dio.budgeting.infrastructure.security.TokenService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,17 +18,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final TokenService tokenService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private TokenService tokenService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public AuthController(AuthenticationManager authenticationManager,
+                           UserRepository userRepository,
+                           TokenService tokenService,
+                           PasswordEncoder passwordEncoder) {
+        this.authenticationManager = authenticationManager;
+        this.userRepository = userRepository;
+        this.tokenService = tokenService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody AuthenticationDTO data) {
@@ -36,7 +39,8 @@ public class AuthController {
 
         var auth = this.authenticationManager.authenticate(usernamePassword);
 
-        var token = tokenService.generateToken((User) auth.getPrincipal());
+        var email = ((UserDetails) auth.getPrincipal()).getUsername();
+        var token = tokenService.generateToken(email);
 
         return ResponseEntity.ok(new LoginResponseDTO(token));
     }

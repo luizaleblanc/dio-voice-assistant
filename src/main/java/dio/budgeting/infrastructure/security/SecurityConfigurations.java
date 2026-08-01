@@ -1,6 +1,5 @@
 package dio.budgeting.infrastructure.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,11 +26,14 @@ import java.util.List;
 @EnableMethodSecurity
 public class SecurityConfigurations {
 
-    @Autowired
-    private SecurityFilter securityFilter;
+    private final SecurityFilter securityFilter;
+    private final String allowedOrigins;
 
-    @Value("${app.cors.allowed-origins:*}")
-    private String allowedOrigins;
+    public SecurityConfigurations(SecurityFilter securityFilter,
+                                   @Value("${app.cors.allowed-origins:*}") String allowedOrigins) {
+        this.securityFilter = securityFilter;
+        this.allowedOrigins = allowedOrigins;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {

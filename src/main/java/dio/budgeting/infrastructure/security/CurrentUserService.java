@@ -11,10 +11,10 @@ public class CurrentUserService {
 
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || !(authentication.getPrincipal() instanceof User user)) {
+        if (authentication == null || !(authentication.getPrincipal() instanceof AuthenticatedUser authenticatedUser)) {
             throw new AccessDeniedException("Usuário não autenticado.");
         }
-        return user;
+        return authenticatedUser.getDomainUser();
     }
 
     public String getCurrentUserId() {
