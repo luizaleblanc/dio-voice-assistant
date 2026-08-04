@@ -1,3 +1,5 @@
+<img width="1911" height="1007" alt="organiza-ia" src="https://github.com/user-attachments/assets/2d56ff9d-deca-4996-978b-afe82440d167" />
+
 # Organiza IA — Voice-Driven Budgeting API
 
 Uma aplicação full-stack para gerenciamento de transações financeiras pessoais utilizando **Inteligência Artificial**, **Processamento de Linguagem Natural (NLP)** e **comandos de voz**. O backend é uma API REST em **Java + Spring Boot**; o frontend é uma interface web em **Next.js** com autenticação, gravação de voz e um dashboard financeiro.
